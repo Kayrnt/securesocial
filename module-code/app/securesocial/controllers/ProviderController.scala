@@ -91,7 +91,7 @@ trait BaseProviderController[U] extends SecureSocial[U]
   private def handleAuth(provider: String, redirectTo: Option[String]) = UserAwareAction.async { implicit request =>
     import ExecutionContext.Implicits.global
     val authenticationFlow = request.user.isEmpty
-    val modifiedSession = overrideOriginalUrl(session, redirectTo)
+    val modifiedSession = overrideOriginalUrl(request.session, redirectTo)
 
     env.providers.get(provider).map { _.authenticate().flatMap {
         case denied: AuthenticationResult.AccessDenied =>
@@ -112,7 +112,7 @@ trait BaseProviderController[U] extends SecureSocial[U]
               env.userService.save(authenticated.profile, mode).flatMap { userForAction =>
                 logger.debug(s"[securesocial] user completed authentication: provider = $profile.providerId, userId: $profile.userId, mode = $mode")
                 val evt = if (mode == SaveMode.LoggedIn) new LoginEvent(userForAction) else new SignUpEvent(userForAction)
-                val sessionAfterEvents = Events.fire(evt).getOrElse(session)
+                val sessionAfterEvents = Events.fire(evt).getOrElse(request.session)
                 import ExecutionContext.Implicits.global
                 builder().fromUser(userForAction).flatMap { authenticator =>
                   Redirect(toUrl(sessionAfterEvents)).withSession(sessionAfterEvents -

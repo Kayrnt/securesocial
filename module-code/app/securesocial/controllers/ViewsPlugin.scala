@@ -17,7 +17,7 @@
 package securesocial.controllers
 
 import play.api.mvc.{Controller, RequestHeader}
-import play.api.templates.{Html, Txt}
+import play.twirl.api.{Html, Txt}
 import securesocial.core.{BasicProfile, RuntimeEnvironment}
 import play.api.data.Form
 import play.api.i18n.Lang
@@ -138,31 +138,31 @@ object ViewTemplates {
 
     override def getLoginPage(form: Form[(String, String)],
                               msg: Option[String] = None)(implicit request: RequestHeader, lang: Lang): Html = {
-      securesocial.views.html.login(form, msg)
+      securesocial.views.html.login(form, msg)(request, lang, implicitly[RuntimeEnvironment[_]])
     }
 
     override def getSignUpPage(form: Form[RegistrationInfo], token: String)(implicit request: RequestHeader, lang: Lang): Html = {
-      securesocial.views.html.Registration.signUp(form, token)
+      securesocial.views.html.Registration.signUp(form, token)(request, lang, implicitly[RuntimeEnvironment[_]])
     }
 
     override def getStartSignUpPage(form: Form[String])(implicit request: RequestHeader, lang: Lang): Html = {
-      securesocial.views.html.Registration.startSignUp(form)
+      securesocial.views.html.Registration.startSignUp(form)(request, lang, implicitly[RuntimeEnvironment[_]])
     }
 
     override def getStartResetPasswordPage(form: Form[String])(implicit request: RequestHeader, lang: Lang): Html = {
-      securesocial.views.html.Registration.startResetPassword(form)
+      securesocial.views.html.Registration.startResetPassword(form)(request, lang, implicitly[RuntimeEnvironment[_]])
     }
 
     override def getResetPasswordPage(form: Form[(String, String)], token: String)(implicit request: RequestHeader, lang: Lang): Html = {
-      securesocial.views.html.Registration.resetPasswordPage(form, token)
+      securesocial.views.html.Registration.resetPasswordPage(form, token)(request, lang, implicitly[RuntimeEnvironment[_]])
     }
 
     override def getPasswordChangePage(form: Form[ChangeInfo])(implicit request: RequestHeader, lang: Lang): Html = {
-      securesocial.views.html.passwordChange(form)
+      securesocial.views.html.passwordChange(form)(request, lang, implicitly[RuntimeEnvironment[_]])
     }
 
     def getNotAuthorizedPage(implicit request: RequestHeader, lang: Lang): Html = {
-      securesocial.views.html.notAuthorized()
+      securesocial.views.html.notAuthorized()(lang, implicitly[RuntimeEnvironment[_]])
     }
   }
 }
@@ -174,27 +174,27 @@ object MailTemplates {
   class Default(env: RuntimeEnvironment[_]) extends MailTemplates {
     implicit val implicitEnv = env
     def getSignUpEmail(token: String)(implicit request: RequestHeader, lang: Lang): (Option[Txt], Option[Html]) = {
-      (None, Some(securesocial.views.html.mails.signUpEmail(token)))
+      (None, Some(securesocial.views.html.mails.signUpEmail(token)(request, lang)))
     }
 
     def getAlreadyRegisteredEmail(user: BasicProfile)(implicit request: RequestHeader, lang: Lang): (Option[Txt], Option[Html]) = {
-      (None, Some(securesocial.views.html.mails.alreadyRegisteredEmail(user)))
+      (None, Some(securesocial.views.html.mails.alreadyRegisteredEmail(user)(request, lang, implicitly[RuntimeEnvironment[_]])))
     }
 
     def getWelcomeEmail(user: BasicProfile)(implicit request: RequestHeader, lang: Lang): (Option[Txt], Option[Html]) = {
-      (None, Some(securesocial.views.html.mails.welcomeEmail(user)))
+      (None, Some(securesocial.views.html.mails.welcomeEmail(user)(request, lang, implicitly[RuntimeEnvironment[_]])))
     }
 
     def getUnknownEmailNotice()(implicit request: RequestHeader, lang: Lang): (Option[Txt], Option[Html]) = {
-      (None, Some(securesocial.views.html.mails.unknownEmailNotice()))
+      (None, Some(securesocial.views.html.mails.unknownEmailNotice()(request, lang)))
     }
 
     def getSendPasswordResetEmail(user: BasicProfile, token: String)(implicit request: RequestHeader, lang: Lang): (Option[Txt], Option[Html]) = {
-      (None, Some(securesocial.views.html.mails.passwordResetEmail(user, token)))
+      (None, Some(securesocial.views.html.mails.passwordResetEmail(user, token)(request, lang, implicitly[RuntimeEnvironment[_]])))
     }
 
     def getPasswordChangedNoticeEmail(user: BasicProfile)(implicit request: RequestHeader, lang: Lang): (Option[Txt], Option[Html]) = {
-      (None, Some(securesocial.views.html.mails.passwordChangedNotice(user)))
+      (None, Some(securesocial.views.html.mails.passwordChangedNotice(user)(request, lang, implicitly[RuntimeEnvironment[_]])))
     }
   }
 }

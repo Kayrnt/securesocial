@@ -1,14 +1,18 @@
-import play.Project._
+import play.PlayScala
 
 name := "SecureSocial"
 
 version := "play-2.3-SNAPSHOT"
 
+scalaVersion := "2.11.1"
+
+lazy val root = (project in file(".")).enablePlugins(PlayScala)
+
 libraryDependencies ++= Seq(
   cache,
   ws,
-  "com.typesafe" %% "play-plugins-util" % "2.2.0",
-  "com.typesafe" %% "play-plugins-mailer" % "2.2.0",
+  "com.typesafe" % "play-plugins-util_2.10" % "2.2.0",
+  "com.typesafe" % "play-plugins-mailer_2.10" % "2.2.0",
   "org.mindrot" % "jbcrypt" % "0.3m"
 )
 
@@ -61,6 +65,4 @@ pomExtra := (
 )
 
 scalacOptions := Seq("-feature", "-deprecation")
-
-playScalaSettings
 

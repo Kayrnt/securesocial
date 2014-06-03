@@ -118,7 +118,7 @@ trait BasePasswordReset[U] extends MailTokenBasedOperations[U] {
                 deleted <- env.userService.deleteToken(token)
               ) yield {
                 env.mailer.sendPasswordChangedNotice(profile)
-                val eventSession = Events.fire(new PasswordResetEvent(updated)).getOrElse(session)
+                val eventSession = Events.fire(new PasswordResetEvent(updated)).getOrElse(request.session)
                 confirmationResult().withSession(eventSession).flashing(Success -> Messages(PasswordUpdated))
               }
             case _ =>

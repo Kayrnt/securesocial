@@ -21,7 +21,7 @@ import play.api.i18n.Messages
 import play.api.libs.json.Json
 import play.api.http.HeaderNames
 import scala.concurrent.{ExecutionContext, Future}
-import play.api.templates.Html
+import play.twirl.api.Html
 
 import securesocial.core.utils._
 import securesocial.core.authenticator._
@@ -53,7 +53,7 @@ trait SecureSocial[U] extends Controller {
         case Accepts.Json() => notAuthenticatedJson
         case Accepts.Html() => Redirect(env.routes.loginPageUrl).
           flashing("error" -> Messages("securesocial.loginRequired"))
-          .withSession(session + (SecureSocial.OriginalUrlKey -> request.uri))
+          .withSession(request.session + (SecureSocial.OriginalUrlKey -> request.uri))
         case _ => Unauthorized("Credentials required")
       }
     }
@@ -132,7 +132,7 @@ trait SecureSocial[U] extends Controller {
       }
     }
 
-    override protected def invokeBlock[A](request: Request[A],
+    override def invokeBlock[A](request: Request[A],
                                           block: (SecuredRequest[A]) => Future[Result]): Future[Result] =
     {
       invokeSecuredBlock(authorize, request, block)
@@ -152,7 +152,7 @@ trait SecureSocial[U] extends Controller {
    * The UserAwareAction builder
    */
   class UserAwareActionBuilder extends ActionBuilder[({ type R[A] = RequestWithUser[A] })#R] {
-    protected def invokeBlock[A](request: Request[A],
+    def invokeBlock[A](request: Request[A],
                                  block: (RequestWithUser[A]) => Future[Result]): Future[Result] =
     {
       import ExecutionContext.Implicits.global

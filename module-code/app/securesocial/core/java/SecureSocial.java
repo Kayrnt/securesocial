@@ -17,7 +17,7 @@
 package securesocial.core.java;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import play.api.templates.Html;
+import play.twirl.api.Html;
 import play.libs.F;
 import play.libs.F.Promise;
 import play.libs.Json;

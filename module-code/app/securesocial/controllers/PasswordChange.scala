@@ -22,7 +22,7 @@ import play.api.Play
 import play.api.data.Form
 import play.api.data.Forms._
 import securesocial.core.providers.utils.PasswordValidator
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages}
 import scala.Some
 import scala.concurrent.{Await, ExecutionContext, Future}
 
@@ -128,7 +128,7 @@ trait BasePasswordChange[U] extends SecureSocial[U] {
         info =>  {
           val newPasswordInfo = env.currentHasher.hash(info.newPassword)
           import ExecutionContext.Implicits.global
-          implicit val userLang = lang(request)
+          implicit val userLang = implicitly[Lang]
           env.userService.updatePasswordInfo(request.user, newPasswordInfo).map {
             case Some(u) =>
               env.mailer.sendPasswordChangedNotice(u)(request, userLang)
