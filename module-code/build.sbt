@@ -6,7 +6,7 @@ version := "play-2.3-SNAPSHOT"
 
 scalaVersion := "2.11.1"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val mainModule = (project in file(".")).enablePlugins(PlayScala)
 
 libraryDependencies ++= Seq(
   cache,
